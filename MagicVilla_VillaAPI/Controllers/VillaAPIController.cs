@@ -13,7 +13,7 @@ namespace MagicVilla_VillaAPI.Controllers
     {
         // Паттерное внедрение зависимостей, регистрация логов
         private readonly ILogger<VillaAPIController> _logger;
-        
+
         public VillaAPIController(ILogger<VillaAPIController> logger)
         {
             _logger = logger;
@@ -21,9 +21,11 @@ namespace MagicVilla_VillaAPI.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status406NotAcceptable)]
+        //[Produces("application/json")] Для решения проблемы 406 
         public ActionResult<IEnumerable<VillaDTO>> GetVillas()
         {
-            _logger.LogInformation("Getting all Villas.");
+            _logger.LogInformation("Getting all Villas");
             return Ok(VillaStore.villaList);
         }
 
@@ -31,11 +33,12 @@ namespace MagicVilla_VillaAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status406NotAcceptable)]
         public ActionResult<VillaDTO> GetVilla(int id)
         {
             if (id == 0)
             {
-                _logger.LogError("Get Villa Error with Id" + id);
+                _logger.LogError("Get Villa Error with Id " + id);
                 return BadRequest();
             }
 
