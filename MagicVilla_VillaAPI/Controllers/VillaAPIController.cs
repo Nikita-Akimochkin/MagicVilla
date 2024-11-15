@@ -1,4 +1,5 @@
 ﻿using MagicVilla_VillaAPI.Data;
+using MagicVilla_VillaAPI.Logging;
 using MagicVilla_VillaAPI.Models;
 using MagicVilla_VillaAPI.Models.DTO;
 using Microsoft.AspNetCore.JsonPatch;
@@ -11,10 +12,9 @@ namespace MagicVilla_VillaAPI.Controllers
     [ApiController] // С этим используется Анотация данных, Смотреть VillaDTO.cs
     public class VillaAPIController : ControllerBase
     {
-        // Паттерное внедрение зависимостей, регистрация логов
-        private readonly ILogger<VillaAPIController> _logger;
-
-        public VillaAPIController(ILogger<VillaAPIController> logger)
+        // Внедрение своих зависимостей
+        private readonly ILogging _logger;
+        public VillaAPIController(ILogging logger)
         {
             _logger = logger;
         }
@@ -25,7 +25,7 @@ namespace MagicVilla_VillaAPI.Controllers
         //[Produces("application/json")] Для решения проблемы 406 
         public ActionResult<IEnumerable<VillaDTO>> GetVillas()
         {
-            _logger.LogInformation("Getting all Villas");
+            _logger.Log("Getting all Villas", "");
             return Ok(VillaStore.villaList);
         }
 
@@ -38,7 +38,7 @@ namespace MagicVilla_VillaAPI.Controllers
         {
             if (id == 0)
             {
-                _logger.LogError("Get Villa Error with Id " + id);
+                _logger.Log("Get Villa Error with Id " + id, "error");
                 return BadRequest();
             }
 
